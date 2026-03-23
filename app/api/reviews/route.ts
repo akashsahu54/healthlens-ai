@@ -5,16 +5,15 @@ import {
   where, serverTimestamp, Timestamp 
 } from 'firebase/firestore'
 
-// GET — Fetch approved reviews
+// GET — Fetch reviews (simplified query - no index needed)
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const limitCount = parseInt(searchParams.get('limit') || '50')
     
-    // Simplified query - just get approved reviews ordered by creation date
+    // Simple query - just order by creation date (no index needed)
     const q = query(
       collection(db, 'reviews'),
-      where('approved', '==', true),
       orderBy('createdAt', 'desc'),
       limit(limitCount)
     )
