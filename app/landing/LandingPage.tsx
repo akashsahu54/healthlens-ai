@@ -6,7 +6,7 @@ import {
   Lock, Clock, CheckCircle2, ArrowRight, ChevronRight,
   Sparkles, Activity, HeartPulse, Microscope, Scan,
   Star, Users, TrendingUp, Menu, X, Heart, Globe, 
-  Fingerprint, LineChart, Eye, Github, Linkedin, Mail
+  Fingerprint, LineChart, Eye, Github, Linkedin, Mail, Twitter
 } from 'lucide-react'
 import ReviewsSection from '@/components/ReviewsSection'
 import Logo from '@/components/Logo'
@@ -1014,6 +1014,15 @@ export default function LandingPage() {
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-5 h-5 text-gray-400 group-hover:text-blue-400 transition-colors" />
+              </a>
+              <a 
+                href="https://twitter.com/akashsahu64158" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center w-10 h-10 rounded-full glass border border-white/10 hover:border-sky-400/40 hover:bg-sky-500/10 transition-all duration-300"
+                aria-label="Twitter"
+              >
+                <Twitter className="w-5 h-5 text-gray-400 group-hover:text-sky-400 transition-colors" />
               </a>
               <a 
                 href="mailto:akashsahu64158@gmail.com" 
