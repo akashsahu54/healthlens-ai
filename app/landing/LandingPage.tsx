@@ -376,59 +376,6 @@ export default function LandingPage() {
     { step: '03', title: 'Get Clear Insights', desc: 'Receive easy-to-understand visualizations, risk alerts, and actionable health advice.', icon: <Activity className="w-8 h-8" />, color: 'from-purple-500 to-pink-500' },
   ]
 
-  const pricingPlans = [
-    {
-      name: 'Starter',
-      subtitle: 'For Individuals',
-      price: 'Free',
-      period: '',
-      features: [
-        '5 Report Analyses / month',
-        'Basic Health Insights',
-        'PDF & Image Upload',
-        'Email Support',
-      ],
-      cta: 'Get Started Free',
-      popular: false,
-      gradient: 'from-slate-600 to-slate-700',
-    },
-    {
-      name: 'Pro',
-      subtitle: 'For Health Enthusiasts',
-      price: '$9',
-      period: '/month',
-      features: [
-        'Unlimited Report Analyses',
-        'Advanced AI Insights',
-        'Health Trend Tracking',
-        'AI Health Chat Assistant',
-        'Priority Support',
-        'Export Reports as PDF',
-      ],
-      cta: 'Start Pro Trial',
-      popular: true,
-      gradient: 'from-cyan-500 to-blue-600',
-    },
-    {
-      name: 'Enterprise',
-      subtitle: 'For Clinics & Hospitals',
-      price: '$49',
-      period: '/month',
-      features: [
-        'Everything in Pro',
-        'Multi-user Dashboard',
-        'API Access',
-        'HIPAA Compliance Suite',
-        'Custom AI Models',
-        'Dedicated Account Manager',
-        'White-label Options',
-      ],
-      cta: 'Contact Sales',
-      popular: false,
-      gradient: 'from-purple-600 to-indigo-700',
-    },
-  ]
-
   // ─── RENDER ─────────────────────────────────
   return (
     <div className="min-h-screen bg-[#060B18] text-white overflow-x-hidden">
@@ -445,7 +392,7 @@ export default function LandingPage() {
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-8 animate-fade-in-down delay-200">
-              {['Features', 'How It Works', 'Pricing', 'Reviews'].map((item) => (
+              {['Features', 'How It Works', 'Reviews'].map((item) => (
                 <a 
                   key={item} 
                   href={`#${item.toLowerCase().replace(/ /g, '-')}`} 
@@ -481,7 +428,7 @@ export default function LandingPage() {
         {mobileMenuOpen && (
           <div className="md:hidden glass border-t border-white/10 animate-fade-in-down">
             <div className="px-4 py-6 space-y-4">
-              {['Features', 'How It Works', 'Pricing', 'Reviews'].map((item) => (
+              {['Features', 'How It Works', 'Reviews'].map((item) => (
                 <a key={item} href={`#${item.toLowerCase().replace(/ /g, '-')}`} onClick={() => setMobileMenuOpen(false)} className="block text-gray-300 hover:text-cyan-400 font-medium">
                   {item}
                 </a>
@@ -955,73 +902,6 @@ export default function LandingPage() {
       {/* ==================== REVIEWS SECTION ==================== */}
       <ReviewsSection />
 
-      {/* ==================== PRICING SECTION ==================== */}
-      <section id="pricing" className="relative py-24 lg:py-36">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-cyan-500/3 rounded-full blur-[200px]" />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20 reveal">
-            <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass text-sm text-cyan-300 font-medium border border-cyan-500/20 mb-6">
-              <Zap className="w-4 h-4" /> Pricing
-            </span>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
-              <span className="text-white">Choose Your </span>
-              <span className="gradient-text">Perfect Plan</span>
-            </h2>
-            <p className="text-gray-400 text-lg max-w-xl mx-auto">
-              Start free. Upgrade when you need more power.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-            {pricingPlans.map((plan, i) => (
-              <div
-                key={i}
-                className={`reveal pricing-card glass-card rounded-2xl p-8 relative ${
-                  plan.popular ? 'border-cyan-500/40 ring-1 ring-cyan-500/20 scale-[1.02]' : ''
-                }`}
-                style={{ transitionDelay: `${i * 150}ms` }}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full text-xs font-bold text-white shadow-xl shadow-cyan-500/30">
-                    Most Popular
-                  </div>
-                )}
-
-                <div className="mb-8">
-                  <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
-                  <p className="text-sm text-gray-500">{plan.subtitle}</p>
-                  <div className="mt-6 flex items-baseline gap-1">
-                    <span className="text-5xl font-extrabold text-white">{plan.price}</span>
-                    {plan.period && <span className="text-gray-400 text-sm">{plan.period}</span>}
-                  </div>
-                </div>
-
-                <ul className="space-y-3.5 mb-8">
-                  {plan.features.map((f, j) => (
-                    <li key={j} className="flex items-start gap-3 text-sm text-gray-300">
-                      <CheckCircle2 className={`w-4 h-4 mt-0.5 flex-shrink-0 ${plan.popular ? 'text-cyan-400' : 'text-gray-500'}`} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                <a
-                  href="/sign-in"
-                  className={`block w-full text-center py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
-                    plan.popular
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-[1.02] active:scale-[0.98]'
-                      : 'glass text-white border border-white/10 hover:bg-white/10 hover:border-white/20 hover:scale-[1.02] active:scale-[0.98]'
-                  }`}
-                >
-                  {plan.cta}
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ==================== CTA SECTION ==================== */}
       <section className="relative py-24 lg:py-36">
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
@@ -1079,7 +959,6 @@ export default function LandingPage() {
               <h4 className="text-sm font-bold text-white mb-4">Product</h4>
               <ul className="space-y-2.5">
                 <li><a href="#features" className="text-sm text-gray-500 hover:text-cyan-400 transition-colors">Features</a></li>
-                <li><a href="#pricing" className="text-sm text-gray-500 hover:text-cyan-400 transition-colors">Pricing</a></li>
                 <li><a href="#how-it-works" className="text-sm text-gray-500 hover:text-cyan-400 transition-colors">How It Works</a></li>
                 <li><a href="#reviews" className="text-sm text-gray-500 hover:text-cyan-400 transition-colors">Reviews</a></li>
               </ul>
