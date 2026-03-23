@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Microscope } from 'lucide-react'
 import Logo from './Logo'
 
 interface LoadingAnimationProps {
@@ -62,25 +61,6 @@ export default function LoadingAnimation({ onComplete, duration = 4000 }: Loadin
 
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center gap-8 px-4">
-        {/* Animated Microscope Icon */}
-        <div className="relative">
-          {/* Outer rotating ring */}
-          <div className="absolute inset-0 w-32 h-32 -m-4">
-            <div className="absolute inset-0 border-4 border-cyan-500/30 rounded-full animate-spin" 
-                 style={{ animationDuration: '3s' }} />
-            <div className="absolute inset-2 border-4 border-purple-500/30 rounded-full animate-spin" 
-                 style={{ animationDuration: '2s', animationDirection: 'reverse' }} />
-          </div>
-
-          {/* Center microscope */}
-          <div className="relative w-24 h-24 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-cyan-500/50 animate-pulse">
-            <Microscope className="w-14 h-14 text-white animate-bounce" style={{ animationDuration: '2s' }} />
-          </div>
-
-          {/* Scanning beam effect */}
-          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1 h-20 bg-gradient-to-b from-cyan-400 to-transparent animate-pulse" />
-        </div>
-
         {/* Logo */}
         <div className="animate-fade-in-up">
           <Logo size="lg" variant="light" />
