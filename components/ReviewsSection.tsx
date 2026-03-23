@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Star, CheckCircle2, Stethoscope, User, Heart, 
-  GraduationCap, Shield, Quote, ThumbsUp, ChevronLeft, 
+  GraduationCap, Shield, ThumbsUp, ChevronLeft, 
   ChevronRight, BadgeCheck, Sparkles, MessageSquareQuote 
 } from 'lucide-react'
 
@@ -20,7 +20,7 @@ interface Review {
   createdAt: string
 }
 
-// Fallback reviews for when Firebase has no data yet
+// Fallback reviews
 const fallbackReviews: Review[] = [
   {
     id: 'fb-1',
@@ -104,45 +104,22 @@ const roleIcons: Record<string, React.ReactNode> = {
   'Medical Student': <GraduationCap className="w-3.5 h-3.5" />,
 }
 
-const roleBadgeColors: Record<string, string> = {
-  'Doctor': 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  'Patient': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-  'Healthcare Professional': 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  'Caregiver': 'bg-pink-500/20 text-pink-300 border-pink-500/30',
-  'Medical Student': 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-}
-
-const avatarGradients = [
+const avatarColors = [
   'from-cyan-500 to-blue-600',
-  'from-blue-500 to-purple-600',
-  'from-emerald-500 to-teal-600',
   'from-purple-500 to-pink-600',
+  'from-emerald-500 to-teal-600',
   'from-amber-500 to-orange-600',
   'from-rose-500 to-red-600',
+  'from-blue-500 to-indigo-600',
 ]
-
-function getTimeAgo(dateStr: string): string {
-  const date = new Date(dateStr)
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-  
-  if (diffDays === 0) return 'Today'
-  if (diffDays === 1) return 'Yesterday'
-  if (diffDays < 7) return `${diffDays} days ago`
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`
-  return `${Math.floor(diffDays / 365)} years ago`
-}
 
 export default function ReviewsSection() {
   const [reviews, setReviews] = useState<Review[]>(fallbackReviews)
   const [activeFilter, setActiveFilter] = useState('All')
   const [currentPage, setCurrentPage] = useState(0)
   const [loading, setLoading] = useState(false)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  // Fetch reviews function
+  // Fetch reviews
   const fetchReviews = async () => {
     setLoading(true)
     try {
@@ -152,25 +129,21 @@ export default function ReviewsSection() {
         if (data.reviews && data.reviews.length > 0) {
           setReviews(data.reviews)
         }
-        // If no reviews in Firebase, keep fallback
       }
     } catch {
-      // Keep fallback reviews on error
+      // Keep fallback
     } finally {
       setLoading(false)
     }
   }
 
-  // Initial fetch
   useEffect(() => {
     fetchReviews()
   }, [])
 
-  // Auto-refresh every 30 seconds to show new reviews
+  // Auto-refresh every 30 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchReviews()
-    }, 30000) // 30 seconds
+    const interval = setInterval(fetchReviews, 30000)
     return () => clearInterval(interval)
   }, [])
 
@@ -180,7 +153,7 @@ export default function ReviewsSection() {
     ? reviews 
     : reviews.filter(r => r.role === activeFilter)
 
-  // Calculate aggregate stats
+  // Stats
   const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
   const totalReviews = reviews.length
   const ratingDistribution = [5, 4, 3, 2, 1].map(star => ({
@@ -197,55 +170,55 @@ export default function ReviewsSection() {
   )
 
   return (
-    <section id="reviews" className="relative py-24 lg:py-32">
-      {/* Background glow */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/10 to-transparent" />
-      <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[150px]" />
-      <div className="absolute bottom-1/3 left-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-[120px]" />
+    <section id="reviews" className="relative py-24 lg:py-32 bg-gradient-to-b from-[#060B18] to-[#0A1628]">
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section header */}
-        <div className="text-center mb-16 reveal">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-sm text-cyan-300 font-medium border border-cyan-500/20 mb-6">
-            <MessageSquareQuote className="w-4 h-4" /> Verified Reviews
-          </span>
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-sm font-medium mb-6">
+            <MessageSquareQuote className="w-4 h-4" />
+            Verified Reviews
+          </div>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
             <span className="text-white">Real Stories from </span>
-            <span className="gradient-text">Real Users</span>
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Real Users</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Every review is from a verified user who actually used HealthLens AI.
-            No fake testimonials. Just honest experiences.
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-8">
+            Every review is from a verified user who actually used HealthLens AI. No fake testimonials. Just honest experiences.
           </p>
+
+          {/* Trust badges */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span className="text-sm text-gray-300">All reviews verified</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
+              <BadgeCheck className="w-4 h-4 text-blue-400" />
+              <span className="text-sm text-gray-300">Identity confirmed via Clerk</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span className="text-sm text-gray-300">No paid reviews</span>
+            </div>
+          </div>
         </div>
 
-        {/* Trust indicators bar */}
-        <div className="reveal flex flex-wrap items-center justify-center gap-6 mb-12">
-          <div className="flex items-center gap-2 px-4 py-2 glass rounded-full border border-white/5">
-            <Shield className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm text-gray-300">All reviews verified</span>
-          </div>
-          <div className="flex items-center gap-2 px-4 py-2 glass rounded-full border border-white/5">
-            <BadgeCheck className="w-4 h-4 text-blue-400" />
-            <span className="text-sm text-gray-300">Identity confirmed via Clerk</span>
-          </div>
-          <div className="flex items-center gap-2 px-4 py-2 glass rounded-full border border-white/5">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span className="text-sm text-gray-300">No paid or incentivized reviews</span>
-          </div>
-        </div>
-
-        {/* Main content: Rating summary + Reviews */}
-        <div className="grid lg:grid-cols-[320px_1fr] gap-8">
-          {/* Left: Rating Summary Card */}
-          <div className="reveal">
-            <div className="glass-card rounded-2xl p-6 sticky top-24">
-              {/* Overall rating */}
-              <div className="text-center mb-6">
-                <div className="text-5xl font-extrabold text-white mb-2">
+        {/* Main Grid */}
+        <div className="grid lg:grid-cols-[300px_1fr] gap-8">
+          {/* Left: Rating Card */}
+          <div className="lg:sticky lg:top-24 h-fit">
+            <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+              {/* Overall Rating */}
+              <div className="text-center pb-6 border-b border-gray-700/50">
+                <div className="text-6xl font-extrabold text-white mb-3">
                   {avgRating.toFixed(1)}
                 </div>
-                <div className="flex items-center justify-center gap-1 mb-2">
+                <div className="flex items-center justify-center gap-1 mb-3">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star 
                       key={star} 
@@ -258,44 +231,46 @@ export default function ReviewsSection() {
                   ))}
                 </div>
                 <p className="text-sm text-gray-400">
-                  Based on {totalReviews} verified reviews
+                  Based on <span className="text-white font-semibold">{totalReviews}</span> verified reviews
                 </p>
               </div>
 
-              {/* Rating distribution */}
-              <div className="space-y-2.5 mb-6">
+              {/* Rating Distribution */}
+              <div className="space-y-3 pt-6">
                 {ratingDistribution.map((item) => (
                   <div key={item.star} className="flex items-center gap-3">
-                    <span className="text-xs text-gray-400 w-4 text-right">{item.star}</span>
-                    <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                    <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+                    <span className="text-sm text-gray-400 w-3">{item.star}</span>
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400 flex-shrink-0" />
+                    <div className="flex-1 h-2.5 bg-gray-700/50 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-700"
                         style={{ width: `${item.pct}%` }}
                       />
                     </div>
-                    <span className="text-xs text-gray-500 w-8">{item.pct}%</span>
+                    <span className="text-sm text-gray-400 w-10 text-right">{item.pct}%</span>
                   </div>
                 ))}
               </div>
 
-              {/* Verified badge */}
-              <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-xs font-semibold text-emerald-300 mb-0.5">100% Verified</p>
-                  <p className="text-[11px] text-gray-400 leading-relaxed">
-                    Every reviewer signed in with their account. Reviews are tied to real users.
-                  </p>
+              {/* 100% Verified Badge */}
+              <div className="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-300 mb-1">100% Verified</p>
+                    <p className="text-xs text-gray-400 leading-relaxed">
+                      Every reviewer signed in with their account. Reviews are tied to real users.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right: Reviews list */}
+          {/* Right: Reviews */}
           <div>
-            {/* Filter tabs */}
-            <div className="flex flex-wrap gap-2 mb-6 reveal">
+            {/* Filter Tabs */}
+            <div className="flex flex-wrap gap-2 mb-6">
               {filters.map((filter) => {
                 const count = filter === 'All' 
                   ? reviews.length 
@@ -305,10 +280,10 @@ export default function ReviewsSection() {
                   <button
                     key={filter}
                     onClick={() => { setActiveFilter(filter); setCurrentPage(0) }}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                       activeFilter === filter
-                        ? 'bg-cyan-500/20 border border-cyan-500/40 text-cyan-300'
-                        : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-gray-300'
+                        ? 'bg-cyan-500/20 border-2 border-cyan-500/50 text-cyan-300 shadow-lg shadow-cyan-500/20'
+                        : 'bg-gray-800/50 border-2 border-gray-700/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300'
                     }`}
                   >
                     {filter} <span className="text-xs opacity-70">({count})</span>
@@ -317,50 +292,40 @@ export default function ReviewsSection() {
               })}
             </div>
 
-            {/* Reviews grid */}
-            <div 
-              ref={scrollContainerRef}
-              className="space-y-4"
-            >
+            {/* Reviews List */}
+            <div className="space-y-4">
               {paginatedReviews.map((review, i) => (
                 <div
                   key={review.id}
-                  className="reveal glass-card rounded-2xl p-6 group hover:border-cyan-500/20 transition-all duration-300"
-                  style={{ transitionDelay: `${i * 100}ms` }}
+                  className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-300"
                 >
                   <div className="flex items-start gap-4">
                     {/* Avatar */}
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${avatarGradients[i % avatarGradients.length]} flex items-center justify-center text-white font-bold text-lg flex-shrink-0 shadow-lg`}>
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${avatarColors[i % avatarColors.length]} flex items-center justify-center text-white font-bold text-lg flex-shrink-0 shadow-lg`}>
                       {review.name.charAt(0)}
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      {/* Header row */}
-                      <div className="flex items-start justify-between gap-2 mb-2">
+                      {/* Header */}
+                      <div className="flex items-start justify-between gap-2 mb-3">
                         <div>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <h4 className="font-bold text-white">{review.name}</h4>
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <h4 className="font-bold text-white text-lg">{review.name}</h4>
                             {review.verified && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/15 border border-emerald-500/25 rounded-full text-[10px] font-semibold text-emerald-400">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/15 border border-emerald-500/30 rounded-full text-xs font-semibold text-emerald-400">
                                 <BadgeCheck className="w-3 h-3" />
                                 Verified
                               </span>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 mt-1 flex-wrap">
-                            {/* Role badge */}
-                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium border ${roleBadgeColors[review.role] || 'bg-gray-500/20 text-gray-300 border-gray-500/30'}`}>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-500/15 border border-blue-500/30 rounded-full text-xs font-medium text-blue-300">
                               {roleIcons[review.role]}
                               {review.role}
                             </span>
                             {review.specialty && (
-                              <span className="text-[11px] text-gray-500">
-                                · {review.specialty}
-                              </span>
+                              <span className="text-xs text-gray-500">· {review.specialty}</span>
                             )}
-                            <span className="text-[11px] text-gray-600">
-                              · {getTimeAgo(review.createdAt)}
-                            </span>
                           </div>
                         </div>
 
@@ -379,28 +344,27 @@ export default function ReviewsSection() {
                         </div>
                       </div>
 
-                      {/* Review title */}
+                      {/* Title */}
                       {review.title && (
-                        <h5 className="font-semibold text-white text-sm mb-2">
+                        <h5 className="font-semibold text-white text-base mb-2">
                           &ldquo;{review.title}&rdquo;
                         </h5>
                       )}
 
-                      {/* Review text */}
-                      <p className="text-gray-400 text-sm leading-relaxed">
+                      {/* Text */}
+                      <p className="text-gray-400 text-sm leading-relaxed mb-4">
                         {review.text}
                       </p>
 
                       {/* Footer */}
-                      <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/5">
+                      <div className="flex items-center gap-4 pt-3 border-t border-gray-700/50">
                         <button className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-cyan-400 transition-colors">
                           <ThumbsUp className="w-3.5 h-3.5" />
                           Helpful ({review.helpful})
                         </button>
-                        <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                          <Quote className="w-3.5 h-3.5" />
+                        <span className="text-xs text-gray-600">
                           Verified purchase
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -410,31 +374,35 @@ export default function ReviewsSection() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-3 mt-8">
+              <div className="flex items-center justify-center gap-2 mt-8">
                 <button
                   onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
                   disabled={currentPage === 0}
-                  className="w-10 h-10 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="w-10 h-10 rounded-xl bg-gray-800/50 border border-gray-700/50 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700/50 hover:border-cyan-500/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentPage(i)}
-                    className={`w-10 h-10 rounded-xl text-sm font-medium transition-all ${
-                      currentPage === i
-                        ? 'bg-cyan-500/20 border border-cyan-500/40 text-cyan-300'
-                        : 'glass text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+                {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
+                  const pageNum = i + Math.max(0, currentPage - 2)
+                  if (pageNum >= totalPages) return null
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-10 h-10 rounded-xl text-sm font-medium transition-all ${
+                        currentPage === pageNum
+                          ? 'bg-cyan-500/20 border-2 border-cyan-500/50 text-cyan-300 shadow-lg shadow-cyan-500/20'
+                          : 'bg-gray-800/50 border border-gray-700/50 text-gray-400 hover:text-white hover:bg-gray-700/50'
+                      }`}
+                    >
+                      {pageNum + 1}
+                    </button>
+                  )
+                })}
                 <button
                   onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
                   disabled={currentPage === totalPages - 1}
-                  className="w-10 h-10 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="w-10 h-10 rounded-xl bg-gray-800/50 border border-gray-700/50 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700/50 hover:border-cyan-500/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
