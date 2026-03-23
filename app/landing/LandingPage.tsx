@@ -6,7 +6,7 @@ import {
   Lock, Clock, CheckCircle2, ArrowRight, ChevronRight,
   Sparkles, Activity, HeartPulse, Microscope, Scan,
   Star, Users, TrendingUp, Menu, X, Heart, Globe, 
-  Fingerprint, LineChart, Eye
+  Fingerprint, LineChart, Eye, Github, Linkedin, Mail
 } from 'lucide-react'
 import ReviewsSection from '@/components/ReviewsSection'
 import Logo from '@/components/Logo'
@@ -989,9 +989,40 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Copyright */}
-          <div className="text-center text-sm text-gray-600">
-            © 2026 HealthLens AI. All rights reserved. Built with ❤️ for better health understanding.
+          {/* Social Media & Copyright */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t border-white/5">
+            <div className="text-sm text-gray-600">
+              © 2026 HealthLens AI. All rights reserved. Built with ❤️ for better health understanding.
+            </div>
+            
+            {/* Social Links */}
+            <div className="flex items-center gap-4">
+              <a 
+                href="https://github.com/akashsahu54" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center w-10 h-10 rounded-full glass border border-white/10 hover:border-cyan-400/40 hover:bg-cyan-500/10 transition-all duration-300"
+                aria-label="GitHub"
+              >
+                <Github className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/akashsahu001" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center w-10 h-10 rounded-full glass border border-white/10 hover:border-blue-400/40 hover:bg-blue-500/10 transition-all duration-300"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5 text-gray-400 group-hover:text-blue-400 transition-colors" />
+              </a>
+              <a 
+                href="mailto:akashsahu64158@gmail.com" 
+                className="group flex items-center justify-center w-10 h-10 rounded-full glass border border-white/10 hover:border-emerald-400/40 hover:bg-emerald-500/10 transition-all duration-300"
+                aria-label="Email"
+              >
+                <Mail className="w-5 h-5 text-gray-400 group-hover:text-emerald-400 transition-colors" />
+              </a>
+            </div>
           </div>
         </div>
       </footer>
