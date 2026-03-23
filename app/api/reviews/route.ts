@@ -9,25 +9,15 @@ import {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
-    const limitCount = parseInt(searchParams.get('limit') || '20')
-    const roleFilter = searchParams.get('role') // 'Doctor', 'Patient', 'Healthcare Professional'
+    const limitCount = parseInt(searchParams.get('limit') || '50')
     
-    let q = query(
+    // Simplified query - just get approved reviews ordered by creation date
+    const q = query(
       collection(db, 'reviews'),
       where('approved', '==', true),
       orderBy('createdAt', 'desc'),
       limit(limitCount)
     )
-
-    if (roleFilter) {
-      q = query(
-        collection(db, 'reviews'),
-        where('approved', '==', true),
-        where('role', '==', roleFilter),
-        orderBy('createdAt', 'desc'),
-        limit(limitCount)
-      )
-    }
 
     const snapshot = await getDocs(q)
     const reviews = snapshot.docs.map(doc => {

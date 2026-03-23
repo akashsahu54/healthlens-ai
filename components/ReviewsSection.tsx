@@ -139,25 +139,39 @@ export default function ReviewsSection() {
   const [reviews, setReviews] = useState<Review[]>(fallbackReviews)
   const [activeFilter, setActiveFilter] = useState('All')
   const [currentPage, setCurrentPage] = useState(0)
+  const [loading, setLoading] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  // Try to fetch real reviews from Firebase
-  useEffect(() => {
-    async function fetchReviews() {
-      try {
-        const res = await fetch('/api/reviews?limit=20')
-        if (res.ok) {
-          const data = await res.json()
-          if (data.reviews && data.reviews.length > 0) {
-            setReviews(data.reviews)
-          }
-          // If no reviews in Firebase, keep fallback
+  // Fetch reviews function
+  const fetchReviews = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/reviews?limit=50')
+      if (res.ok) {
+        const data = await res.json()
+        if (data.reviews && data.reviews.length > 0) {
+          setReviews(data.reviews)
         }
-      } catch {
-        // Keep fallback reviews on error
+        // If no reviews in Firebase, keep fallback
       }
+    } catch {
+      // Keep fallback reviews on error
+    } finally {
+      setLoading(false)
     }
+  }
+
+  // Initial fetch
+  useEffect(() => {
     fetchReviews()
+  }, [])
+
+  // Auto-refresh every 30 seconds to show new reviews
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchReviews()
+    }, 30000) // 30 seconds
+    return () => clearInterval(interval)
   }, [])
 
   const filters = ['All', 'Doctor', 'Patient', 'Caregiver', 'Medical Student']

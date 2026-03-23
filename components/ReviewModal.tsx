@@ -79,14 +79,8 @@ export default function ReviewModal({ isOpen, onClose, onSuccess }: ReviewModalP
       setSuccess(true)
       setTimeout(() => {
         onSuccess?.()
-        onClose()
-        // Reset form
-        setRating(0)
-        setRole('')
-        setSpecialty('')
-        setTitle('')
-        setText('')
-        setSuccess(false)
+        // Reload the page to show the new review
+        window.location.reload()
       }, 2000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
